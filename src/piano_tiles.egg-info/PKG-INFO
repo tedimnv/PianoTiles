@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: piano-tiles
+Version: 0.1.0
+Summary: Python clone of the Piano Tiles game.
+Requires-Python: >=3.11
+Requires-Dist: pygame>=2.5
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: pytest-cov>=5; extra == "dev"

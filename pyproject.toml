@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "piano-tiles"
+version = "0.1.0"
+description = "Python clone of the Piano Tiles game."
+requires-python = ">=3.11"
+dependencies = [
+    "pygame>=2.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["piano_tiles*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers -ra"
+# `src` makes the `piano_tiles` package importable; `.` keeps the `tests`
+# package importable (e.g. `from tests.scripted import ...`).
+pythonpath = ["src", "."]
+markers = [
+    "unit: pure-logic unit tests; must not initialize pygame",
+    "ui: UI tests; run headlessly via SDL_VIDEODRIVER=dummy",
+]
+
+[tool.coverage.run]
+# Directory (src-layout) form, not the bare import name: it lets coverage walk
+# the package and list every module — even ones no test imports — at 0%.
+source = ["src/piano_tiles"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = false
