@@ -38,6 +38,7 @@ from piano_tiles.config import (
     OVERLAY_BAND_BOTTOM,
     OVERLAY_BAND_TOP,
     OVERLAY_FONT_SIZE,
+    OVERLAY_SUBTITLE_FONT_SIZE,
     OVERLAY_TEXT_COLOR,
     SCORE_FONT_SIZE,
     SCORE_POS_X,
@@ -74,6 +75,7 @@ class Renderer:
             pygame.font.init()
         self._score_font = pygame.font.Font(None, SCORE_FONT_SIZE)
         self._overlay_font = pygame.font.Font(None, OVERLAY_FONT_SIZE)
+        self._overlay_subtitle_font = pygame.font.Font(None, OVERLAY_SUBTITLE_FONT_SIZE)
         self._title_font = pygame.font.Font(None, MAIN_MENU_TITLE_FONT_SIZE)
         self._menu_text_font = pygame.font.Font(None, MAIN_MENU_TEXT_FONT_SIZE)
         self._song_font = pygame.font.Font(None, SONG_OPTION_FONT_SIZE)
@@ -300,7 +302,16 @@ class Renderer:
         band_surf = pygame.Surface((band_w, band_h))
         band_surf.fill(overlay.color)
         text = self._overlay_font.render(overlay.message, True, OVERLAY_TEXT_COLOR)
-        band_surf.blit(text, text.get_rect(center=(band_w // 2, band_h // 2)))
+        text_rect = text.get_rect(center=(band_w // 2, band_h // 2))
+        band_surf.blit(text, text_rect)
+        if overlay.subtitle is not None:
+            subtitle = self._overlay_subtitle_font.render(
+                overlay.subtitle, True, OVERLAY_TEXT_COLOR
+            )
+            band_surf.blit(
+                subtitle,
+                subtitle.get_rect(midtop=(band_w // 2, text_rect.bottom + 15)),
+            )
         surface.blit(band_surf, (0, OVERLAY_BAND_TOP))
 
 

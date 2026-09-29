@@ -14,7 +14,7 @@ Snapping straight to full opacity removes the artifact entirely.
 
 from dataclasses import dataclass
 
-from piano_tiles.config import RESTART_KEY
+from piano_tiles.config import MENU_KEY, RESTART_KEY
 from piano_tiles.models.game_state import GameState
 from piano_tiles.models.state import State
 
@@ -23,12 +23,19 @@ from piano_tiles.models.state import State
 class OverlayInfo:
     color: tuple[int, int, int]
     message: str
+    subtitle: str | None = None
 
 
 _MESSAGES: dict[State, str] = {
     State.MENU: f"Press {RESTART_KEY.upper()} to start",
     State.PAUSED: "PAUSED",
     State.GAME_OVER: "GAME OVER",
+}
+
+# Secondary hints shown beneath the main message, in the same text color but
+# smaller. Only GAME_OVER carries one (the way back to the song picker).
+_SUBTITLES: dict[State, str] = {
+    State.GAME_OVER: f"Press {MENU_KEY.upper()} for main menu",
 }
 
 
@@ -38,7 +45,11 @@ def overlay_for(state: GameState) -> OverlayInfo | None:
     message = _MESSAGES.get(state.state)
     if message is None:
         return None
-    return OverlayInfo(color=_band_color(state), message=message)
+    return OverlayInfo(
+        color=_band_color(state),
+        message=message,
+        subtitle=_SUBTITLES.get(state.state),
+    )
 
 
 def _band_color(state: GameState) -> tuple[int, int, int]:

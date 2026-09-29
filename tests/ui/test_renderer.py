@@ -14,6 +14,7 @@ from piano_tiles.config import (
     MENU_OVERLAY_COLOR,
     OVERLAY_BAND_BOTTOM,
     OVERLAY_BAND_TOP,
+    OVERLAY_TEXT_COLOR,
     PAUSED_OVERLAY_COLOR,
     PEACH_SORBET,
     SCORE_POS_X,
@@ -282,6 +283,39 @@ def test_game_over_overlay_uses_game_over_color(headless_surface) -> None:
         headless_surface,
     )
     assert _rgb(headless_surface, 10, _band_center_y()) == GAME_OVER_OVERLAY_COLOR
+
+
+def _has_color_in_rows(surface, y0: int, y1: int, color) -> bool:
+    """True if any pixel in the horizontal strip [y0, y1) matches `color`."""
+    for y in range(y0, y1):
+        for x in range(WINDOW_W):
+            if _rgb(surface, x, y) == color:
+                return True
+    return False
+
+
+@pytest.mark.ui
+def test_game_over_overlay_paints_main_menu_hint_below_the_label(headless_surface) -> None:
+    """The GAME_OVER band carries a small white hint beneath the main label. We
+    sample the lower strip of the band (below where the big text sits) for the
+    overlay text color."""
+    renderer = Renderer()
+    renderer.render(GameState(state=State.GAME_OVER, score=10), headless_surface)
+    subtitle_strip_top = _band_center_y() + 15
+    assert _has_color_in_rows(
+        headless_surface, subtitle_strip_top, OVERLAY_BAND_BOTTOM, OVERLAY_TEXT_COLOR
+    )
+
+
+@pytest.mark.ui
+def test_paused_overlay_has_no_subtitle_strip(headless_surface) -> None:
+    """PAUSED shows no secondary hint — the lower band strip is bare of text."""
+    renderer = Renderer()
+    renderer.render(GameState(state=State.PAUSED), headless_surface)
+    subtitle_strip_top = _band_center_y() + 15
+    assert not _has_color_in_rows(
+        headless_surface, subtitle_strip_top, OVERLAY_BAND_BOTTOM, OVERLAY_TEXT_COLOR
+    )
 
 
 @pytest.mark.ui

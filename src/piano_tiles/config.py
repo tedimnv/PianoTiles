@@ -224,6 +224,9 @@ SONGS: tuple[Song, ...] = (
 # ---- text & overlay geometry ----------------------------------------------
 SCORE_FONT_SIZE: int = 36
 OVERLAY_FONT_SIZE: int = 48
+# The GAME_OVER hint ("Press M for main menu") sits just under the main
+# overlay message at half its size.
+OVERLAY_SUBTITLE_FONT_SIZE: int = OVERLAY_FONT_SIZE // 2
 SCORE_POS_X: int = 10
 SCORE_POS_Y: int = 10
 OVERLAY_BAND_TOP: int = WINDOW_H // 2 - 60

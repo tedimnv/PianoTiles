@@ -10,6 +10,7 @@ import pytest
 from piano_tiles.components.overlay import OverlayInfo, overlay_for
 from piano_tiles.config import (
     DEFAULT_PALETTE,
+    MENU_KEY,
     MINT_BLUSH,
     PEACH_SORBET,
     RESTART_KEY,
@@ -42,8 +43,33 @@ def test_paused_overlay_uses_default_band_color_and_label() -> None:
 def test_game_over_overlay_uses_default_band_color_and_label() -> None:
     info = overlay_for(GameState(state=State.GAME_OVER))
     assert info == OverlayInfo(
-        color=DEFAULT_PALETTE.game_over_band, message="GAME OVER"
+        color=DEFAULT_PALETTE.game_over_band,
+        message="GAME OVER",
+        subtitle=f"Press {MENU_KEY.upper()} for main menu",
     )
+
+
+# ---- GAME_OVER subtitle ----------------------------------------------------
+#
+# GAME_OVER (and only GAME_OVER) carries a secondary hint pointing the player
+# back to the song picker. The other overlay-bearing states have none.
+
+
+def test_game_over_overlay_carries_main_menu_hint() -> None:
+    info = overlay_for(GameState(state=State.GAME_OVER))
+    assert info.subtitle == f"Press {MENU_KEY.upper()} for main menu"
+
+
+@pytest.mark.parametrize("state", [State.MENU, State.PAUSED])
+def test_non_game_over_overlays_have_no_subtitle(state) -> None:
+    assert overlay_for(GameState(state=state)).subtitle is None
+
+
+def test_subtitle_is_palette_independent() -> None:
+    """Like the message, the hint text never changes with the theme."""
+    mint = overlay_for(GameState(state=State.GAME_OVER, palette=MINT_BLUSH))
+    peach = overlay_for(GameState(state=State.GAME_OVER, palette=PEACH_SORBET))
+    assert mint.subtitle == peach.subtitle
 
 
 # ---- band color follows the active palette --------------------------------
