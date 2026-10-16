@@ -376,7 +376,7 @@ Adds a boot screen the player lands on before any round: it lists the controls a
 - The boot screen shows the title, the controls, a "Choose a song:" header, and one clickable box per song (`"Title - Artist"`). Slots past the end of the catalog render as empty placeholders.
 - Clicking a song selects it, loads its track, and goes to the start screen; clicking empty space does nothing.
 - Each song carries its own colour theme: the play-field (background, the hit-zone line, and the two tile bands) plus the three overlay bands (`MENU` / `PAUSED` / `GAME_OVER`). Overlay text stays white, so every song band is dark enough to contrast.
-- Current catalog: **Slow Dancing In The Dark — JOJI** (Mint & Blush theme) and **Loose — Daniel Caesar** (Peach Sorbet theme).
+- Current catalog: **Slow Dancing In The Dark — JOJI** (Mint & Blush theme), **Loose — Daniel Caesar** (Peach Sorbet theme), and **Yesterday — The Beatles** (Arctic theme).
 
 
 ### [x]  Step 1 — `MAIN_MENU` boot screen + song-selection flow
@@ -410,11 +410,11 @@ Adds a boot screen the player lands on before any round: it lists the controls a
 - `Palette` dataclass: `background`, `hit_zone`, `tile_falling`, `tile_held`, `menu_band`, `paused_band`, `game_over_band`. `DEFAULT_PALETTE` mirrors the classic cyan/magenta constants and is the fallback before any song is picked.
 - `GameState` carries the active `palette`; `Game.palette` returns the chosen song's palette (or `DEFAULT_PALETTE`) and stamps it into every snapshot.
 - `Renderer` reads the play-field colours from `state.palette`; `overlay_for` reads the band colour from the palette. Overlay text remains white (`OVERLAY_TEXT_COLOR`).
-- Theme assignment: Slow Dancing In The Dark → **Mint & Blush**; Loose → **Peach Sorbet**.
+- Theme assignment: Slow Dancing In The Dark → **Mint & Blush**; Loose → **Peach Sorbet**; Yesterday → **Arctic**.
 - **Test criteria:**
   - **Unit:** every field of every palette is a valid RGB tuple; `DEFAULT_PALETTE` equals the classic colour constants.
   - **Unit:** each song-band colour (`menu_band` / `paused_band` / `game_over_band`) on the song palettes is dark enough for white text (perceived luminance under the contrast bar); the legacy `DEFAULT_PALETTE` is exempt.
-  - **Unit:** the songs are themed as specified (Mint & Blush / Peach Sorbet).
+  - **Unit:** the songs are themed as specified (Mint & Blush / Peach Sorbet / Arctic).
   - **Unit:** `Game.palette` is the default before selection, becomes the chosen song's palette after, and the per-frame snapshot carries it.
   - **Unit:** `overlay_for` returns the palette's band colour for each overlay-bearing state; swapping the palette recolours the band but never changes the message.
   - **UI:** rendering `PLAYING` with a non-default palette paints the background, hit-zone line, and tile bands in that palette's colours; each overlay band (`MENU` / `PAUSED` / `GAME_OVER`) paints in the palette's band colour.

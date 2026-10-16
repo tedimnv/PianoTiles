@@ -173,8 +173,8 @@ PEACH_SORBET = Palette(
     game_over_band=(64, 32, 40),
 )
 
-# "Arctic" — icy blue tiles on a cold near-black. Reserved for the third song
-# slot; attach it to a Song once that track is added.
+# "Arctic" — icy blue tiles on a cold near-black. Theme for the third song,
+# "Yesterday".
 ARCTIC = Palette(
     background=(12, 20, 24),       # #0C1418
     hit_zone=(124, 202, 223),      # #7CCADF
